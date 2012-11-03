@@ -1,4 +1,4 @@
-(function() {
+var Calendar = (function() {
     function renderMonth(container, year, month) {
         var navigation = 
             '<nav class="calendar-navigation" data-year="' + year + '" data-month="' + month + '">' +
@@ -176,5 +176,13 @@
         );
     }
 
-    renderMonth(document.querySelector('div'), 2012, 11);
+    function Calendar() {
+    }
+
+    Calendar.prototype.render = function(container) {
+        var today = Date.create();
+        renderMonth(container, today.getFullYear(), today.getMonth() + 1);
+    };
+
+    return Calendar;
 }());

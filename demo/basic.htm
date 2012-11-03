@@ -5,9 +5,13 @@
     <title>Calendar basic demo</title>
     <link rel="stylesheet" href="../src/default-theme.css">
     <script src="../src/sugar.js"></script>
-</head>
-<body data-type="abc">
-    <div class="calendar"></div>
     <script src="../src/calendar.js"></script>
+</head>
+<body>
+    <div class="calendar"></div>
+    <script>
+        var calendar = new Calendar();
+        calendar.render(document.querySelector('div'));
+    </script>
 </body>
 </html>
