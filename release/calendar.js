@@ -26,7 +26,7 @@ var Calendar = (function() {
             // 找到该月日历的起始日期
             var date = new Date(year, month - 1, 1);
             // 如果起始日不是周日，用上个月最后几天补上
-            date.setDate(date.getDay() - date.getDay());
+            date.setDate(date.getDate() - date.getDay());
             // 记录今天，但只要日期不要时间，以方便后续比较
             var today = new Date((new Date).toDateString());
             // 记录当前月，以供后续比较
@@ -50,11 +50,7 @@ var Calendar = (function() {
                         className.push('calendar-today');
                     }
                     className = className.length ? ('class="' + className.join(' ') + '"') : '';
-                    var dateString = 
-                        date.getFullYear() + '-' +
-                        pad(date.getMonth() + 1) + '-' +
-                        pad(date.getDate());
-                    body += '<td ' + className + ' data-date="' + dateString + '">' + date.getDate() + '</td>';
+                    body += '<td ' + className + '>' + date.getDate() + '</td>';
     
                     // 往前一天
                     date.setDate(date.getDate() + 1);
