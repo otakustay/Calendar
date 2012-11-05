@@ -1,5 +1,5 @@
 var renderYear = (function() {
-    function render(container, year, options) {
+    function render(calendar, year, options) {
         var navigation = 
             '<nav class="calendar-navigation" data-year="' + year + '">' +
                 '<span class="calendar-navigation-previous">&lt;</span>' +
@@ -19,25 +19,25 @@ var renderYear = (function() {
                 '</tr>' +
             '</tbody>';
 
-        container.dataset.type = 'year';
-        container.innerHTML = navigation + '<div class="calendar-body"><table>' + body + '</table></div>';
+        calendar.container.dataset.type = 'year';
+        calendar.container.innerHTML = navigation + '<div class="calendar-body"><table>' + body + '</table></div>';
 
-        bindEvents(container);
+        bindEvents(calendar);
     }
 
-    function bindEvents(container) {
-        var navigation = container.querySelector('.calendar-navigation');
-        var previous = container.querySelector('.calendar-navigation-previous');
-        var next = container.querySelector('.calendar-navigation-next');
-        var title = container.querySelector('.calendar-navigation-title');
-        var body = container.querySelector('tbody');
+    function bindEvents(calendar) {
+        var navigation = calendar.container.querySelector('.calendar-navigation');
+        var previous = calendar.container.querySelector('.calendar-navigation-previous');
+        var next = calendar.container.querySelector('.calendar-navigation-next');
+        var title = calendar.container.querySelector('.calendar-navigation-title');
+        var body = calendar.container.querySelector('tbody');
 
         previous.addEventListener(
             'click',
             function() {
                 var year = +navigation.dataset.year;
-                renderYear(container, year - 1);
-                container.querySelector('.calendar-body').style.webkitAnimation = 'slideLeftToRight .4s';
+                renderYear(calendar, year - 1);
+                calendar.container.querySelector('.calendar-body').style.webkitAnimation = 'slideLeftToRight .4s';
             },
             false
         );
@@ -45,8 +45,8 @@ var renderYear = (function() {
             'click',
             function() {
                 var year = +navigation.dataset.year;
-                renderYear(container, year + 1);
-                container.querySelector('.calendar-body').style.webkitAnimation = 'slideRightToLeft .4s';
+                renderYear(calendar, year + 1);
+                calendar.container.querySelector('.calendar-body').style.webkitAnimation = 'slideRightToLeft .4s';
             },
             false
         );
@@ -56,9 +56,9 @@ var renderYear = (function() {
             'click',
             function(e) {
                 var year = +navigation.dataset.year;
-                renderEpoch(container, year);
+                renderEpoch(calendar, year);
 
-                container.querySelector('.calendar-body').style.webkitAnimation = 'shrink .4s';
+                calendar.container.querySelector('.calendar-body').style.webkitAnimation = 'shrink .4s';
             }
         );
 
@@ -71,9 +71,9 @@ var renderYear = (function() {
                 }
                 var year = +navigation.dataset.year;
                 var month = parseInt(e.target.innerText, 10);
-                renderMonth(container, year, month);
+                renderMonth(calendar, year, month);
 
-                container.querySelector('.calendar-body').style.webkitAnimation = 'expand .4s';
+                calendar.container.querySelector('.calendar-body').style.webkitAnimation = 'expand .4s';
             },
             false
         );

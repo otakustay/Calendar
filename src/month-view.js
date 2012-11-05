@@ -4,7 +4,7 @@ var renderMonth = (function() {
         return str.length === 1 ? ('0' + str) : str;
     }
 
-    function render(container, year, month, options) {
+    function render(calendar, year, month) {
         var navigation = 
             '<nav class="calendar-navigation" data-year="' + year + '" data-month="' + month + '">' +
                 '<span class="calendar-navigation-previous">&lt;</span>' +
@@ -58,26 +58,26 @@ var renderMonth = (function() {
 
         body += '</tbody>';
 
-        container.dataset.type = 'month';
-        container.innerHTML = navigation + '<div class="calendar-body"><table>' + head + body + '</table></div>';
+        calendar.container.dataset.type = 'month';
+        calendar.container.innerHTML = navigation + '<div class="calendar-body"><table>' + head + body + '</table></div>';
 
-        bindEvents(container);
+        bindEvents(calendar, calendar);
     }
 
-    function bindEvents(container) {
-        var navigation = container.querySelector('.calendar-navigation');
-        var previous = container.querySelector('.calendar-navigation-previous');
-        var next = container.querySelector('.calendar-navigation-next');
-        var title = container.querySelector('.calendar-navigation-title');
-        var body = container.querySelector('tbody');
+    function bindEvents(calendar) {
+        var navigation = calendar.container.querySelector('.calendar-navigation');
+        var previous = calendar.container.querySelector('.calendar-navigation-previous');
+        var next = calendar.container.querySelector('.calendar-navigation-next');
+        var title = calendar.container.querySelector('.calendar-navigation-title');
+        var body = calendar.container.querySelector('tbody');
 
         previous.addEventListener(
             'click',
             function() {
                 // 月份是从0开始的，因此上个月就要减2
                 var date = new Date(+navigation.dataset.year, +navigation.dataset.month - 2, 1);
-                renderMonth(container, date.getFullYear(), date.getMonth() + 1);
-                container.querySelector('.calendar-body').style.webkitAnimation = 'slideLeftToRight .4s';
+                renderMonth(calendar, date.getFullYear(), date.getMonth() + 1);
+                calendar.container.querySelector('.calendar-body').style.webkitAnimation = 'slideLeftToRight .4s';
             },
             false
         );
@@ -86,8 +86,8 @@ var renderMonth = (function() {
             function() {
                 // 月份是从0开始的，因此下个月就是不加不减
                 var date = new Date(+navigation.dataset.year, +navigation.dataset.month, 1);
-                renderMonth(container, date.getFullYear(), date.getMonth() + 1);
-                container.querySelector('.calendar-body').style.webkitAnimation = 'slideRightToLeft .4s';
+                renderMonth(calendar, date.getFullYear(), date.getMonth() + 1);
+                calendar.container.querySelector('.calendar-body').style.webkitAnimation = 'slideRightToLeft .4s';
             },
             false
         );
@@ -97,9 +97,9 @@ var renderMonth = (function() {
             'click',
             function(e){
                 var year = +navigation.dataset.year;
-                renderYear(container, year);
+                renderYear(calendar, year);
 
-                container.querySelector('.calendar-body').style.webkitAnimation = 'shrink .4s';
+                calendar.container.querySelector('.calendar-body').style.webkitAnimation = 'shrink .4s';
             },
             false
         );
@@ -114,6 +114,13 @@ var renderMonth = (function() {
                 var cells = [].slice.call(body.querySelectorAll('td'));
                 cells.forEach(function(td) { td.classList.remove('calendar-selected'); })
                 e.target.classList.add('calendar-selected');
+
+                var date = new Date(
+                    +navigation.dataset.year,
+                    +navigation.dataset.month,
+                    parseInt(e.target.innerText, 10)
+                );
+                calendar._trigger('select', date);
             },
             false
         );

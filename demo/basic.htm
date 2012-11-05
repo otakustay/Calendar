@@ -8,8 +8,15 @@
 </head>
 <body>
     <div class="calendar"></div>
+    <p id="display"></p>
     <script>
         var calendar = new Calendar();
+        calendar.on(
+            'select',
+            function(date) {
+                document.getElementById('display').innerText = '已选择日期：' + date.toDateString();
+            }
+        );
         calendar.render(document.querySelector('div'));
     </script>
 </body>

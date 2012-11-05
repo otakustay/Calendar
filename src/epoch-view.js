@@ -1,5 +1,5 @@
 var renderEpoch = (function() {
-    function render(container, year) {
+    function render(calendar, year) {
         // 以10年为单位，前后各推1年
         // 如2012年显示在2009-2020的范围内
         // 需要根据`year`，找到最近的可被10整除的年份，然后减1
@@ -23,17 +23,17 @@ var renderEpoch = (function() {
         }
         body += '</tbody>';
 
-        container.dataset.type = 'epoch';
-        container.innerHTML = navigation + '<div class="calendar-body"><table>' + body + '</table></div>';
+        calendar.container.dataset.type = 'epoch';
+        calendar.container.innerHTML = navigation + '<div class="calendar-body"><table>' + body + '</table></div>';
 
-        bindEvents(container);
+        bindEvents(calendar);
     }
 
-    function bindEvents(container) {
-        var navigation = container.querySelector('.calendar-navigation');
-        var previous = container.querySelector('.calendar-navigation-previous');
-        var next = container.querySelector('.calendar-navigation-next');
-        var body = container.querySelector('tbody');
+    function bindEvents(calendar) {
+        var navigation = calendar.container.querySelector('.calendar-navigation');
+        var previous = calendar.container.querySelector('.calendar-navigation-previous');
+        var next = calendar.container.querySelector('.calendar-navigation-next');
+        var body = calendar.container.querySelector('tbody');
 
         previous.addEventListener(
             'click',
@@ -41,8 +41,8 @@ var renderEpoch = (function() {
                 var year = +navigation.dataset.start;;
                 // 起始年份始终是10年为单位再减1
                 // 因此前一个10年的起始年份为当前起始年份向前9年
-                renderEpoch(container, year - 9);
-                container.querySelector('.calendar-body').style.webkitAnimation = 'slideLeftToRight .4s';
+                renderEpoch(calendar, year - 9);
+                calendar.container.querySelector('.calendar-body').style.webkitAnimation = 'slideLeftToRight .4s';
             },
             false
         );
@@ -52,8 +52,8 @@ var renderEpoch = (function() {
                 var year = +navigation.dataset.start;
                 // 向后一页即为下一个10年，对应起始年份为当前的结束年份
                 // 即当前起始年份向后12年
-                renderEpoch(container, year + 12);
-                container.querySelector('.calendar-body').style.webkitAnimation = 'slideRightToLeft .4s';
+                renderEpoch(calendar, year + 12);
+                calendar.container.querySelector('.calendar-body').style.webkitAnimation = 'slideRightToLeft .4s';
             },
             false
         );
@@ -66,9 +66,9 @@ var renderEpoch = (function() {
                     return;
                 }
                 var year = +parseInt(e.target.innerText);
-                renderYear(container, year);
+                renderYear(calendar, year);
 
-                container.querySelector('.calendar-body').style.webkitAnimation = 'expand .4s';
+                calendar.container.querySelector('.calendar-body').style.webkitAnimation = 'expand .4s';
             },
             false
         );
