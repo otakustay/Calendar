@@ -3,6 +3,9 @@ var path = require('path');
 var importPrefix = '// @import '
 var newline = (process.platform === 'win32' ? '\r\n' : '\n');
 
+var src = path.join(__dirname, '..', 'src');
+var lib = path.join(src, 'lib');
+
 function calculateSpaces(line) {
     var count = 0;
     for (var i = 0; i < line.length; i++) {
@@ -20,7 +23,7 @@ function processFile(filename, output, spaceCount) {
     spaceCount = spaceCount || 0;
     var linePrefix = Array(spaceCount + 1).join(' ');
 
-    var input = fs.readFileSync(path.join(__dirname, filename), 'utf8');
+    var input = fs.readFileSync(path.join(src, filename), 'utf8');
     var lines = input.split(/\r?\n/);
 
     for (var i = 0; i < lines.length; i++) {
@@ -42,10 +45,21 @@ function processFile(filename, output, spaceCount) {
     output.push('');
 }
 
+function copyFile(source, destination) {
+    fs.createReadStream(source).pipe(fs.createWriteStream(destination));
+}
+
 var output = [];
 processFile('calendar.js', output);
 fs.writeFileSync(
-    path.join(__dirname, 'calendar-widget.js'), 
+    path.join(__dirname, 'calendar.js'), 
     output.join(newline), 
     'utf8'
 );
+
+copyFile(path.join(src, 'default-theme.css'), path.join(__dirname, 'default-theme.css'));
+var libFiles = fs.readdirSync(lib);
+for (var i = 0; i < libFiles.length; i++) {
+    var filename = libFiles[i];
+    copyFile(path.join(lib, filename), path.join(__dirname, 'lib', filename));
+}

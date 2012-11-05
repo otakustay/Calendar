@@ -1,0 +1,124 @@
+@font-face {
+  font-family: "FontAwesome";
+  src: url('lib/fontawesome-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@-webkit-keyframes slideLeftToRight {
+    from {
+        left: -100%;
+    }
+    to {
+        left: 0;
+    }
+}
+@-webkit-keyframes slideRightToLeft {
+    from {
+        left: 100%;
+    }
+    to {
+        left: 0;
+    }
+}
+@-webkit-keyframes shrink {
+    from {
+        -webkit-transform: scale(2);
+    }
+    to {
+        -webkit-transform: scale(1);
+    }
+}
+@-webkit-keyframes expand {
+    from {
+        -webkit-transform: scale(0);
+    }
+    to {
+        -webkit-transform: scale(1);
+    }
+}
+
+.calendar {
+    width: 400px;
+    height: 300px;
+    position: relative;
+    font-size: 14px;
+}
+
+/* 导航条 */
+/* @navigation-height: 40px; */
+.calendar-navigation {
+    display: -webkit-box;
+    height: 40px; /* @navigation-height */
+    line-height: 40px; /* @navigation-height */
+}
+.calendar-navigation span {
+    -webkit-user-select: none;
+    cursor: default;
+}
+.calendar-navigation span:hover {
+    color: #757575;
+}
+.calendar-navigation-previous,
+.calendar-navigation-next {
+    display: block;
+    width: 14%;
+    text-align: center;
+    font-family: FontAwesome;
+    font-size: 0;
+}
+.calendar-navigation-previous::before {
+    content: "\f0d9";
+    font-size: 16px;
+}
+.calendar-navigation-next::before {
+    font-size: 16px;
+    content: "\f0da";
+}
+.calendar-navigation-title {
+    display: block;
+    text-align: center;
+    -webkit-box-flex: 1;
+    font-weight: bold;
+}
+
+/* 整体部分 */
+.calendar-body {
+    position: absolute;
+    top: 40px; /* @navigation-height */
+    bottom: 0;
+    width: 100%;
+}
+.calendar-body table {
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
+}
+.calendar-body th,
+.calendar-body td {
+    vertical-align: middle;
+    text-align: center;
+    padding: 0;
+    border: 2px solid #fff;
+    background: #f0f0f0;
+}
+.calendar-body th {
+    padding: 4px 0;
+}
+
+.calendar-body .calendar-not-current-month {
+    background: #e4e4e4;
+}
+.calendar-body .calendar-weekend {
+    background: #c3c3c3;
+}
+.calendar-body .calendar-today {
+    background: #757575;
+}
+.calendar-body td:hover {
+    background: #fff;
+}
+.calendar-body .calendar-selected,
+.calendar-body .calendar-selected:hover {
+    background: #008a00;
+}
