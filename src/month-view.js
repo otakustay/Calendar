@@ -1,9 +1,7 @@
 var renderMonth = (function() {
-    function getFirstDay(year, month) {
-        var date = Date.create(year, month - 1);
-        // 如果起始日不是周日，用上个月最后几天补上
-        date.setWeekday(0);
-        return date;
+    function pad(str) {
+        str = str + '';
+        return str.length === 1 ? ('0' + str) : str;
     }
 
     function render(container, year, month, options) {
@@ -23,7 +21,14 @@ var renderMonth = (function() {
             '</thead>';
         var body = '<tbody>';
 
-        var date = getFirstDay(year, month);
+        // 找到该月日历的起始日期
+        var date = new Date(year, month - 1, 1);
+        // 如果起始日不是周日，用上个月最后几天补上
+        date.setDate(date.getDay() - date.getDay());
+        // 记录今天，但只要日期不要时间，以方便后续比较
+        var today = new Date((new Date).toDateString());
+        // 记录当前月，以供后续比较
+        var thisMonth = today.getMonth();
 
         // 最坏情况下，一个月是31天，第一天是周六，则需要6行，因此生成6行7列的表格
         for (var row = 0; row < 6; row++) {
@@ -31,21 +36,22 @@ var renderMonth = (function() {
             for (var column = 0; column < 7; column ++) {
                 var className = [];
                 // 如果不是同一个月的，添加一个class
-                if (!date.isThisMonth()) {
+                if (date.getMonth() !== thisMonth) {
                     className.push('calendar-not-current-month');
                 }
                 // 如果是周末，添加一个class
-                if (date.isWeekend()) {
+                if (date.getDay() === 0 || date.getDay() === 6) {
                     className.push('calendar-weekend');
                 }
                 // 如果是今天，添加一个class
-                if (date.isToday()) {
+                if (date === today) {
                     className.push('calendar-today');
                 }
                 className = className.length ? ('class="' + className.join(' ') + '"') : '';
-                body += '<td ' + className + ' data-date="' + date.format('{yyyy}-{MM}-{dd}') + '">' + date.getDate() + '</td>';
+                body += '<td ' + className + '>' + date.getDate() + '</td>';
 
-                date = date.addDays(1);
+                // 往前一天
+                date.setDate(date.getDate() + 1);
             }
             body += '</tr>';
         }
@@ -69,7 +75,7 @@ var renderMonth = (function() {
             'click',
             function() {
                 // 月份是从0开始的，因此上个月就要减2
-                var date = Date.create(+navigation.dataset.year, +navigation.dataset.month).addMonths(-2);
+                var date = new Date(+navigation.dataset.year, +navigation.dataset.month - 2, 1);
                 renderMonth(container, date.getFullYear(), date.getMonth() + 1);
                 container.querySelector('.calendar-body').style.webkitAnimation = 'slideLeftToRight .4s';
             },
@@ -79,7 +85,7 @@ var renderMonth = (function() {
             'click',
             function() {
                 // 月份是从0开始的，因此下个月就是不加不减
-                var date = Date.create(+navigation.dataset.year, +navigation.dataset.month);
+                var date = new Date(+navigation.dataset.year, +navigation.dataset.month, 1);
                 renderMonth(container, date.getFullYear(), date.getMonth() + 1);
                 container.querySelector('.calendar-body').style.webkitAnimation = 'slideRightToLeft .4s';
             },

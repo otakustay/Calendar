@@ -8,7 +8,7 @@ var Calendar = (function() {
     }
 
     Calendar.prototype.render = function(container) {
-        var today = Date.create();
+        var today = new Date();
         renderMonth(container, today.getFullYear(), today.getMonth() + 1);
     };
 
